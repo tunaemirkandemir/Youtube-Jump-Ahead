@@ -148,7 +148,6 @@ def evaluate(model,test_dataloader):
         for features, targets in test_dataloader:
             outputs = model(features)
             predicted = (outputs > 0.5).float()
-            print(predicted)
             total += targets.size(0)
             correct += (predicted[:, -1] == targets[:, -1]).sum().item()
 
@@ -156,8 +155,8 @@ def evaluate(model,test_dataloader):
     print(f'Test Accuracy: {accuracy:.2f}%')
 
 
-def regressor_pipeline():
-    df = get_data()
+def regressor_pipeline(df):
+    
     model_features, target, grouped_features, action_encoder, videoID_encoder, topic_encoder, tag_encoder, scaler= pre_process_df(df)
     sequences = create_sequences(model_features, target, grouped_features)
     train_dataloader,test_dataloader = prepare_data(sequences)
@@ -165,7 +164,7 @@ def regressor_pipeline():
     evaluate(model,test_dataloader) 
     return model , action_encoder, videoID_encoder, topic_encoder, tag_encoder,scaler,df
     
-def predict(model ,user_data, action_encoder, videoID_encoder, topic_encoder, tag_encoder,scaler, sequence_length=3):
+def predict_skip(model ,user_data, action_encoder, videoID_encoder, topic_encoder, tag_encoder,scaler, sequence_length=3):
     action_encoded=action_encoder.transform(user_data[['Action']]).toarray()
     topics_encoded = topic_encoder.transform(user_data[['Metadata']].apply(lambda x : x.get('topic'),axis =1).values.reshape(-1,1)).toarray()
     videoID_encoded = videoID_encoder.transform(user_data[['Video_ID']]).toarray()
@@ -202,8 +201,8 @@ def main():
     
     print(user_data)
     print(user_id)
-    prediction = predict(model ,user_data, action_encoder, videoID_encoder, topic_encoder, tag_encoder,scaler,)
-    
+    prediction = predict_skip(model ,user_data, action_encoder, videoID_encoder, topic_encoder, tag_encoder,scaler)
+    print(prediction)
     
 
 if __name__ == "__main__":
