@@ -12,7 +12,7 @@ def gen_datetime(min_year, max_year=datetime.now().year):
 
 def create_data():
     userID = random.randint(10,70)
-    videoID = random.choice(string.ascii_letters) + random.choice(string.ascii_letters) +random.choice(string.ascii_letters)+ str(random.randint(100,999))
+    videoID = random.randint(1,5)
     action = random.choice(['play', 'skip', 'pause'])
     timestamp = gen_datetime(2020).strftime("%Y-%m-%d %H:%M:%S")
     segment_start = "00:"+gen_datetime(2020).strftime("%M:%S")
@@ -74,7 +74,6 @@ def create_dummy_data(amount=400):
     
     
     return data 
-
 
 
 
